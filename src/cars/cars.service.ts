@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { Cars } from './cars.interface';
 
 @Injectable()
@@ -27,6 +27,22 @@ export class CarsService {
     }
 
     public find(id: number): Cars{
-        return this.cars.find( car => car.id === id );
+
+        const car = this.cars.find( car => car.id === id );
+
+        if(!car)
+            throw new HttpException('Resource not found', HttpStatus.NOT_FOUND);
+            // throw new NotFoundException();
+        
+        return car;
+    }
+
+    public create({id, brand, year}: Cars): Cars{
+
+        const car:Cars = {id, brand,year};
+
+        const resul = this.cars.push(car);
+
+        return car;
     }
 }
