@@ -1,32 +1,35 @@
 import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
-import { Cars } from './cars.interface';
+import { v4 as uuidV4 } from 'uuid';
+import { Car } from './interfaces/cars.interface';
+import { CreateCarDto } from './dtos/create-car.dto';
+import { UpdateCarDto } from './dtos/update-car.dto';
 
 @Injectable()
 export class CarsService {
-    private cars: Cars[] = [
+    private cars: Car[] = [
         {
-            id: 1,
+            id: uuidV4(),
             brand: 'Fiesta',
             year: 2005
         },
         {
-            id:2,
+            id:uuidV4(),
             brand:'Mustang',
             year: 2018
         },
         {
-            id:3,
+            id: uuidV4(),
             brand:'Mercedes',
             year: 2021
         }
 
     ];
 
-    public findAll(): Cars[]{
+    public findAll(): Car[]{
         return this.cars;
     }
 
-    public find(id: number): Cars{
+    public find(id: string): Car{
 
         const car = this.cars.find( car => car.id === id );
 
@@ -37,12 +40,36 @@ export class CarsService {
         return car;
     }
 
-    public create({id, brand, year}: Cars): Cars{
+    public create({ brand, year}: CreateCarDto): Car{
+        const car:Car = {id:uuidV4(), brand,year};
+        this.cars.push(car);
 
-        const car:Cars = {id, brand,year};
+        return car;
+    }
 
-        const resul = this.cars.push(car);
+    public update(id: string, updateCarDto: UpdateCarDto): Car {
+        
+        let cardb = this.find(id);
 
+        this.cars = this.cars.map( car => {
+            if( car.id === id ){
+                cardb = {
+                        ...car,
+                        ...updateCarDto,
+                        id
+                    };
+                return cardb;
+            }
+            return car;
+        });
+
+        return cardb;
+    }
+
+    public delete(id: string){
+        const car = this.find( id );
+        this.cars = this.cars.filter( c => c.id !== id );
+        
         return car;
     }
 }
