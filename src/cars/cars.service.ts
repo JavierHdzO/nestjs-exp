@@ -6,24 +6,25 @@ import { UpdateCarDto } from './dtos/update-car.dto';
 
 @Injectable()
 export class CarsService {
-    private cars: Car[] = [
-        {
-            id: uuidV4(),
-            brand: 'Fiesta',
-            year: 2005
-        },
-        {
-            id:uuidV4(),
-            brand:'Mustang',
-            year: 2018
-        },
-        {
-            id: uuidV4(),
-            brand:'Mercedes',
-            year: 2021
-        }
+    private cars: Car[];
+    // = [
+    //     {
+    //         id: uuidV4(),
+    //         brand: 'Fiesta',
+    //         year: 2005
+    //     },
+    //     {
+    //         id:uuidV4(),
+    //         brand:'Mustang',
+    //         year: 2018
+    //     },
+    //     {
+    //         id: uuidV4(),
+    //         brand:'Mercedes',
+    //         year: 2021
+    //     }
 
-    ];
+    // ];
 
     public findAll(): Car[]{
         return this.cars;
@@ -71,5 +72,9 @@ export class CarsService {
         this.cars = this.cars.filter( c => c.id !== id );
         
         return car;
+    }
+
+    factories( cars: Car[]){
+        this.cars = cars;
     }
 }
